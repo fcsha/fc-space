@@ -1,0 +1,110 @@
+---
+import '@/styles/global.css'
+import logo from '@/assets/logo.svg'
+import HeaderLink from '@/components/HeaderLink.astro'
+import ThemeToggle from '@/components/ThemeToggle.astro'
+import { GITHUB_URL, ICP_NUMBER, SITE_TITLE } from '@/consts'
+
+interface Props {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const fullTitle = title === SITE_TITLE ? title : `${title} - ${SITE_TITLE}`
+const year = new Date().getFullYear()
+---
+
+<!doctype html>
+<html lang="zh-Hans" class="color-scheme-light dark:color-scheme-dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={logo.src} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE_TITLE}
+      href={new URL('rss.xml', Astro.site)}
+    />
+    <meta name="generator" content={Astro.generator} />
+
+    <script is:inline>
+      const theme = localStorage.getItem('theme')
+      if (
+        theme === 'dark' ||
+        (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark')
+      }
+    </script>
+
+    <link rel="canonical" href={canonicalURL} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body
+    class="min-h-screen bg-zinc-50 font-sans text-zinc-700 antialiased dark:bg-zinc-950 dark:text-zinc-300"
+  >
+    <header
+      class="sticky top-0 z-10 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/80"
+    >
+      <nav class="relative mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <div class="m-0 text-base font-bold">
+          <a
+            href="/"
+            class="group flex items-center gap-2 text-zinc-900 transition-colors dark:text-zinc-100"
+          >
+            <img src={logo.src} alt="" width="24" height="24" />
+            <span
+              ><span
+                class="transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-400"
+                >FC</span
+              >个人空间</span
+            >
+          </a>
+        </div>
+        <div class="absolute left-1/2 flex -translate-x-1/2 items-center gap-2">
+          <HeaderLink href="/">首页</HeaderLink>
+          <HeaderLink href="/blog">博客</HeaderLink>
+        </div>
+        <ThemeToggle />
+      </nav>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-12">
+      <slot />
+    </main>
+
+    <footer class="border-t border-zinc-200 py-8 dark:border-zinc-800">
+      <div class="mx-auto flex max-w-5xl flex-col items-center gap-2 px-4">
+        <div
+          class="flex w-full items-center justify-between text-sm text-zinc-500 dark:text-zinc-400"
+        >
+          <span>&copy; {year} {SITE_TITLE}</span>
+          <div class="flex items-center gap-4">
+            <a
+              href="/rss.xml"
+              class="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">RSS</a
+            >
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">GitHub</a
+            >
+          </div>
+        </div>
+        <a
+          href="https://beian.miit.gov.cn"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-xs text-zinc-400 transition-colors hover:text-emerald-600 dark:text-zinc-500 dark:hover:text-emerald-400"
+          >{ICP_NUMBER}</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

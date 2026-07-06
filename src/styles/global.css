@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+  .prose :not(pre) > code {
+    @apply bg-zinc-100 px-1.5 py-0.5 dark:bg-zinc-800;
+  }
+  .prose :not(pre) > code::before,
+  .prose :not(pre) > code::after {
+    content: none;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    @apply ring-2 ring-emerald-500 ring-offset-2 ring-offset-white outline-none dark:ring-offset-zinc-950;
+  }
+  ::selection {
+    @apply bg-emerald-200 text-emerald-900 dark:bg-emerald-500/30 dark:text-emerald-100;
+  }
+}
