@@ -1,45 +1,24 @@
 ---
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import FormattedDate from '@/components/FormattedDate.astro'
-import Tag from '@/components/Tag.astro'
-import { dateLabel, dateTitle } from '@/utils/date'
+import TagFilter from '@/components/TagFilter.astro'
+import PostList from '@/components/PostList.astro'
+import { collectTags } from '@/utils/tags'
 import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts'
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 )
+const tags = collectTags(posts)
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <h1 class="mb-8 text-2xl font-bold text-zinc-900 dark:text-zinc-100">博客</h1>
-  <ul class="flex flex-col gap-4">
-    {
-      posts.map((post) => (
-        <li>
-          <a
-            href={`/blog/${post.id}/`}
-            class="block border border-zinc-200 bg-white p-5 transition-colors hover:border-emerald-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-emerald-600"
-          >
-            <h2 class="mb-1 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              {post.data.title}
-            </h2>
-            <div class="mb-2 flex flex-wrap items-center gap-2">
-              <span
-                class="text-sm text-zinc-500 dark:text-zinc-400"
-                title={dateTitle(post.data.pubDate, post.data.updatedDate)}
-              >
-                {dateLabel(post.data.updatedDate)}{' '}
-                <FormattedDate date={post.data.updatedDate ?? post.data.pubDate} />
-              </span>
-              {post.data.tags.map((tag) => (
-                <Tag name={tag} />
-              ))}
-            </div>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400">{post.data.description}</p>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  <h1 class="mb-8 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+    博客
+    <span class="ml-2 text-base font-normal text-zinc-400 dark:text-zinc-500">
+      共 {posts.length} 篇
+    </span>
+  </h1>
+  <TagFilter tags={tags} />
+  <PostList posts={posts} />
 </BaseLayout>

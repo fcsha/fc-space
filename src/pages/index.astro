@@ -43,7 +43,7 @@ const posts = (await getCollection('blog'))
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">最新更新</h2>
       <a
-        href="/blog"
+        href="/blog/"
         class="flex items-center gap-1 px-3 py-1 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
         >全部
         <svg
@@ -63,15 +63,14 @@ const posts = (await getCollection('blog'))
       {
         posts.map((post, i) => (
           <li class={i === 1 ? 'hidden sm:block' : i === 2 ? 'hidden lg:block' : ''}>
-            <a
-              href={`/blog/${post.id}/`}
-              class="flex h-full flex-col border border-zinc-200 bg-white p-5 transition-colors hover:border-emerald-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-emerald-600"
-            >
+            <article class="relative flex h-full flex-col border border-zinc-200 bg-white p-5 transition-colors hover:border-emerald-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-emerald-600">
               <h3
                 class="mb-2 line-clamp-1 font-bold text-zinc-900 dark:text-zinc-100"
                 title={post.data.title}
               >
-                {post.data.title}
+                <a href={`/blog/${post.id}/`} class="after:absolute after:inset-0">
+                  {post.data.title}
+                </a>
               </h3>
               <div class="mb-2 flex flex-wrap items-center gap-1.5">
                 <span
@@ -91,7 +90,7 @@ const posts = (await getCollection('blog'))
               >
                 {post.data.description}
               </p>
-            </a>
+            </article>
           </li>
         ))
       }

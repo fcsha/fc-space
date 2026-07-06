@@ -1,0 +1,39 @@
+---
+import { tagToSlug } from '@/utils/tags'
+
+interface Props {
+  tags: { name: string; count: number }[]
+  activeTag?: string | null
+}
+
+const { tags, activeTag = null } = Astro.props
+---
+
+<div class="mb-6 flex flex-wrap items-center gap-2">
+  <a
+    href="/blog/"
+    class:list={[
+      'border px-3 py-1 text-sm transition-colors',
+      activeTag === null
+        ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:border-emerald-500 dark:bg-emerald-950 dark:text-emerald-300'
+        : 'border-zinc-200 text-zinc-600 hover:border-emerald-400 hover:text-emerald-600 dark:border-zinc-800 dark:text-zinc-400 dark:hover:border-emerald-600 dark:hover:text-emerald-400',
+    ]}
+  >
+    全部
+  </a>
+  {
+    tags.map(({ name, count }) => (
+      <a
+        href={`/blog/tags/${tagToSlug(name)}/`}
+        class:list={[
+          'border px-3 py-1 text-sm transition-colors',
+          activeTag === name
+            ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:border-emerald-500 dark:bg-emerald-950 dark:text-emerald-300'
+            : 'border-zinc-200 text-zinc-600 hover:border-emerald-400 hover:text-emerald-600 dark:border-zinc-800 dark:text-zinc-400 dark:hover:border-emerald-600 dark:hover:text-emerald-400',
+        ]}
+      >
+        {name}<span class="ml-1 opacity-60">{count}</span>
+      </a>
+    ))
+  }
+</div>
