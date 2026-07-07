@@ -3,21 +3,15 @@ import { tagToSlug } from '@/utils/tags'
 
 interface Props {
   name: string
-  active?: boolean
 }
 
-const { name, active = false } = Astro.props
+const { name } = Astro.props
 const href = `/blog/tags/${tagToSlug(name)}/`
 ---
 
 <a
   href={href}
-  class:list={[
-    'relative z-10 inline-block px-2 py-0.5 text-xs font-medium transition-colors',
-    active
-      ? 'bg-emerald-600 text-white dark:bg-emerald-500 dark:text-zinc-950'
-      : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:hover:bg-emerald-900',
-  ]}
+  class="relative z-10 inline-block bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:hover:bg-emerald-900"
 >
   {name}
 </a>

@@ -1,0 +1,60 @@
+---
+import { filterButtonClass } from '@/utils/tags'
+
+interface Props {
+  page: {
+    currentPage: number
+    lastPage: number
+  }
+  baseUrl: string
+}
+
+const { page, baseUrl } = Astro.props
+const { currentPage, lastPage } = page
+const pageUrl = (p: number) => (p === 1 ? baseUrl : `${baseUrl}${p}/`)
+const prevPage = currentPage > 1 ? currentPage - 1 : null
+const nextPage = currentPage < lastPage ? currentPage + 1 : null
+---
+
+{
+  lastPage > 1 && (
+    <nav class="mt-8 flex items-center gap-2" aria-label="分页导航">
+      <div class="flex-1">
+        {prevPage !== null && (
+          <a
+            href={pageUrl(prevPage)}
+            rel="prev"
+            class:list={[filterButtonClass.base, filterButtonClass.inactive]}
+          >
+            上一页
+          </a>
+        )}
+      </div>
+      <div class="flex gap-2">
+        {Array.from({ length: lastPage }, (_, i) => i + 1).map((p) => (
+          <a
+            href={pageUrl(p)}
+            class:list={[
+              filterButtonClass.base,
+              p === currentPage ? filterButtonClass.active : filterButtonClass.inactive,
+            ]}
+            aria-current={p === currentPage ? 'page' : undefined}
+          >
+            {p}
+          </a>
+        ))}
+      </div>
+      <div class="flex flex-1 justify-end">
+        {nextPage !== null && (
+          <a
+            href={pageUrl(nextPage)}
+            rel="next"
+            class:list={[filterButtonClass.base, filterButtonClass.inactive]}
+          >
+            下一页
+          </a>
+        )}
+      </div>
+    </nav>
+  )
+}

@@ -4,36 +4,40 @@ import type { GetStaticPaths } from 'astro'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import TagFilter from '@/components/TagFilter.astro'
 import PostList from '@/components/PostList.astro'
+import Pagination from '@/components/Pagination.astro'
 import { collectTags, tagToSlug } from '@/utils/tags'
 import { SITE_TITLE } from '@/consts'
 
-export const getStaticPaths = (async () => {
+export const getStaticPaths = (async ({ paginate }) => {
+  const PAGE_SIZE = 5
   const posts = (await getCollection('blog')).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   )
   const allTags = collectTags(posts)
-  return allTags.map(({ name }) => ({
-    params: { tag: tagToSlug(name) },
-    props: {
-      activeTag: name,
-      allTags,
-      posts: posts.filter((p) => p.data.tags.includes(name)),
-    },
-  }))
+  return allTags.flatMap(({ name }) => {
+    const tagPosts = posts.filter((p) => p.data.tags.includes(name))
+    return paginate(tagPosts, {
+      pageSize: PAGE_SIZE,
+      params: { tag: tagToSlug(name) },
+      props: { activeTag: name, allTags },
+    })
+  })
 }) satisfies GetStaticPaths
 
-const { activeTag, allTags, posts } = Astro.props
+const { page, activeTag, allTags } = Astro.props
 const title = `${activeTag} - 博客`
 const description = `标签「${activeTag}」下的文章 - ${SITE_TITLE}`
+const baseUrl = `/blog/tags/${tagToSlug(activeTag)}/`
 ---
 
 <BaseLayout title={title} description={description}>
   <h1 class="mb-8 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
     标签：<span class="text-emerald-600 dark:text-emerald-400">{activeTag}</span>
     <span class="ml-2 text-base font-normal text-zinc-400 dark:text-zinc-500">
-      共 {posts.length} 篇
+      共 {page.total} 篇
     </span>
   </h1>
   <TagFilter tags={allTags} activeTag={activeTag} />
-  <PostList posts={posts} />
+  <PostList posts={page.data} />
+  <Pagination page={page} baseUrl={baseUrl} />
 </BaseLayout>

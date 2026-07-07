@@ -1,24 +1,33 @@
 ---
 import { getCollection } from 'astro:content'
+import type { GetStaticPaths } from 'astro'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import TagFilter from '@/components/TagFilter.astro'
 import PostList from '@/components/PostList.astro'
+import Pagination from '@/components/Pagination.astro'
 import { collectTags } from '@/utils/tags'
 import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts'
 
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-)
-const tags = collectTags(posts)
+export const getStaticPaths = (async ({ paginate }) => {
+  const PAGE_SIZE = 5
+  const posts = (await getCollection('blog')).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  )
+  const tags = collectTags(posts)
+  return paginate(posts, { pageSize: PAGE_SIZE, props: { tags } })
+}) satisfies GetStaticPaths
+
+const { page, tags } = Astro.props
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <h1 class="mb-8 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
     博客
     <span class="ml-2 text-base font-normal text-zinc-400 dark:text-zinc-500">
-      共 {posts.length} 篇
+      共 {page.total} 篇
     </span>
   </h1>
   <TagFilter tags={tags} />
-  <PostList posts={posts} />
+  <PostList posts={page.data} />
+  <Pagination page={page} baseUrl="/blog/" />
 </BaseLayout>
