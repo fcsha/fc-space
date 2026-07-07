@@ -28,8 +28,12 @@ html.theme-transition::view-transition {
 }
 
 html.theme-transition::view-transition-image-pair(root) {
-  perspective: 200vmin;
+  perspective: 2500px;
   perspective-origin: center;
+  transform-style: preserve-3d;
+}
+
+html.theme-transition::view-transition-group(root) {
   transform-style: preserve-3d;
 }
 
@@ -40,6 +44,7 @@ html.theme-transition::view-transition-new(root) {
   transform: translateZ(-50vw) scale(var(--scale)) rotateY(var(--rotation))
     translateZ(50vw);
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 html.theme-transition::view-transition-old(root) {
