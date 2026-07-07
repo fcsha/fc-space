@@ -17,8 +17,19 @@ import { Sun, Moon } from '@lucide/astro'
     const toggle = document.getElementById('theme-toggle')
     if (!toggle) return
     toggle.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark')
-      localStorage.setItem('theme', isDark ? 'dark' : 'light')
+      const flip = () => {
+        const isDark = document.documentElement.classList.toggle('dark')
+        localStorage.setItem('theme', isDark ? 'dark' : 'light')
+      }
+      if (!document.startViewTransition) {
+        flip()
+        return
+      }
+      document.documentElement.classList.add('theme-transition')
+      const transition = document.startViewTransition(flip)
+      transition.finished.finally(() => {
+        document.documentElement.classList.remove('theme-transition')
+      })
     })
   })
 </script>

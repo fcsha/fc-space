@@ -2,8 +2,95 @@
 @plugin '@tailwindcss/typography';
 @custom-variant dark (&:where(.dark, .dark *));
 
+@property --rotation {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --scale {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
 ::view-transition-group(site-header) {
   z-index: 100;
+}
+
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  view-transition-name: none !important;
+}
+
+html.theme-transition::view-transition {
+  background: var(--color-zinc-500);
+}
+
+html.theme-transition::view-transition-image-pair(root) {
+  perspective: 200vmin;
+  perspective-origin: center;
+  transform-style: preserve-3d;
+}
+
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
+  animation: 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50% 0;
+  transform: translateZ(-50vw) scale(var(--scale)) rotateY(var(--rotation))
+    translateZ(50vw);
+  backface-visibility: hidden;
+}
+
+html.theme-transition::view-transition-old(root) {
+  animation-name: reveal-out;
+}
+
+html.theme-transition::view-transition-new(root) {
+  animation-name: reveal-in;
+}
+
+@keyframes reveal-out {
+  from {
+    --rotation: 0deg;
+    --scale: 1;
+    animation-timing-function: ease-in-out;
+  }
+  15% {
+    --scale: 0.8;
+    --rotation: 0deg;
+  }
+  85% {
+    --scale: 0.8;
+    --rotation: 90deg;
+    animation-timing-function: ease-in-out;
+  }
+  to {
+    --scale: 1;
+    --rotation: 90deg;
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    --rotation: -90deg;
+    --scale: 1;
+    animation-timing-function: ease-in-out;
+  }
+  15% {
+    --scale: 0.8;
+    --rotation: -90deg;
+  }
+  85% {
+    --scale: 0.8;
+    --rotation: 0deg;
+    animation-timing-function: ease-in-out;
+  }
+  to {
+    --scale: 1;
+    --rotation: 0deg;
+  }
 }
 
 @layer base {
