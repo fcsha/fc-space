@@ -6,6 +6,7 @@ import logo from '@/assets/logo.svg'
 import { dateLabel, dateTitle } from '@/utils/date'
 import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts'
 import Tag from '@/components/Tag.astro'
+import { ArrowRight } from '@lucide/astro'
 
 const posts = (await getCollection('blog'))
   .sort(
@@ -46,17 +47,7 @@ const posts = (await getCollection('blog'))
         href="/blog/"
         class="flex items-center gap-1 px-3 py-1 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
         >全部
-        <svg
-          class="h-4 w-4"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg
-        >
+        <ArrowRight class="h-4 w-4" />
       </a>
     </div>
     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
