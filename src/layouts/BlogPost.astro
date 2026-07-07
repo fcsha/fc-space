@@ -5,9 +5,9 @@ import Tag from '@/components/Tag.astro'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { dateLabel } from '@/utils/date'
 
-type Props = CollectionEntry<'blog'>['data']
+type Props = CollectionEntry<'blog'>['data'] & { id: string }
 
-const { title, description, pubDate, updatedDate, tags } = Astro.props
+const { title, description, pubDate, updatedDate, tags, id } = Astro.props
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -23,7 +23,10 @@ const jsonLd = {
 <BaseLayout title={title} description={description}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <article>
-    <header class="mb-8 border-b border-zinc-200 pb-6 dark:border-zinc-800">
+    <header
+      class="mb-8 border-b border-zinc-200 pb-6 dark:border-zinc-800"
+      transition:name={`post-${id}`}
+    >
       <h1 class="mb-3 text-3xl leading-tight font-bold text-zinc-900 dark:text-zinc-100">
         {title}
       </h1>
