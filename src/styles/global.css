@@ -35,7 +35,6 @@ html.theme-transition::view-transition-image-pair(root) {
 
 html.theme-transition::view-transition-old(root),
 html.theme-transition::view-transition-new(root) {
-  animation: 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
   transform-style: preserve-3d;
   transform-origin: 50% 50% 0;
   transform: translateZ(-50vw) scale(var(--scale)) rotateY(var(--rotation))
@@ -44,11 +43,11 @@ html.theme-transition::view-transition-new(root) {
 }
 
 html.theme-transition::view-transition-old(root) {
-  animation-name: reveal-out;
+  animation: reveal-out 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 html.theme-transition::view-transition-new(root) {
-  animation-name: reveal-in;
+  animation: reveal-in 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 @keyframes reveal-out {
